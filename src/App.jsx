@@ -21,7 +21,7 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      const socketio = io("http://localhost:5000", {
+      const socketio = io("https://socail-media-be.onrender.com", {
         query: {
           userId: currentUser.userDetails._id,
         },
@@ -32,8 +32,6 @@ const App = () => {
       // listen all the events
       socketio.on("getOnlineUsers", (onlineUsers) => {
         dispatch(setOnlineUsers(onlineUsers));
-        
-        
       });
 
       return () => {

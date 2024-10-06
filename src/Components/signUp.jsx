@@ -41,7 +41,7 @@ const SignUp = () => {
     try {
       dispatch(signupStart());
       const response = await axios.post(
-        "http://localhost:5000/api/users/signup",
+        "https://socail-media-be.onrender.com/api/users/signup",
         {
           name,
           username,

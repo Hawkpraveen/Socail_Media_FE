@@ -45,7 +45,7 @@ const Posts = () => {
     const fetchPosts = async () => {
       dispatch(fetchPostsStart());
       try {
-        const response = await axios.get("http://localhost:5000/api/post/");
+        const response = await axios.get("https://socail-media-be.onrender.com/api/post/");
        // console.log(response);
 
         dispatch(fetchPostsSuccess(response.data));
@@ -71,7 +71,7 @@ const Posts = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/post/like/${postId}`,
+        `https://socail-media-be.onrender.com/api/post/like/${postId}`,
         {},
         {
           headers: {
@@ -127,7 +127,7 @@ const Posts = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/post/reply/${postId}`,
+        `https://socail-media-be.onrender.com/api/post/reply/${postId}`,
         { text: commentText },
         {
           headers: {

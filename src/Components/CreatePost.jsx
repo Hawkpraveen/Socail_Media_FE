@@ -40,7 +40,7 @@ const CreatePost = ({ postedBy, profilePic, onClose }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/post/create",
+        "https://socail-media-be.onrender.com/api/post/create",
         data,
         {
           headers: {

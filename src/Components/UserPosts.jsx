@@ -31,7 +31,7 @@ const UserPosts = () => {
     const fetchUserPosts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/post/user/${username}`
+          `https://socail-media-be.onrender.com/api/post/user/${username}`
         );
         setPosts(response.data);
       } catch (err) {
@@ -47,7 +47,7 @@ const UserPosts = () => {
 
   const handleDelete = async (postId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/post/${postId}`, {
+      await axios.delete(`https://socail-media-be.onrender.com/api/post/${postId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

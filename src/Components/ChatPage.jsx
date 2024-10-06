@@ -24,7 +24,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (currentuser.userDetails._id) {
-      const socketConnection = io("http://localhost:5000", {
+      const socketConnection = io("https://socail-media-be.onrender.com", {
         query: { userId: currentuser.userDetails._id },
       });
       setSocket(socketConnection);
@@ -58,7 +58,7 @@ const ChatPage = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/messages/all/${receiverId}`,
+        `https://socail-media-be.onrender.com/api/messages/all/${receiverId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const ChatPage = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/messages/send/${receiverId}`,
+        `https://socail-media-be.onrender.com/api/messages/send/${receiverId}`,
         { textMessage },
         {
           headers: {

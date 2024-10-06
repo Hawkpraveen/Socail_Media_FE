@@ -44,7 +44,7 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
       }
 
       const response = await axios.put(
-        `http://localhost:5000/api/users/edit-user/${user._id}`,
+        `https://socail-media-be.onrender.com/api/users/edit-user/${user._id}`,
         updatedData,
         {
           headers: {

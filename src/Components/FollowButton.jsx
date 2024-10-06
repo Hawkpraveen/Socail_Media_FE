@@ -25,7 +25,7 @@ const FollowButton = ({ userId, username }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/users/follow-user/${userId}`,
+        `https://socail-media-be.onrender.com/api/users/follow-user/${userId}`,
         {},
         {
           headers: {
