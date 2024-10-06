@@ -5,30 +5,28 @@ import PostsPage from "../Pages/PostsPage";
 
 import { FaComments, FaHome, FaSignOutAlt, FaUser } from "react-icons/fa";
 import UserProfile from "./UserProfile";
-import Chatting from "./Chatting";
+import ChatPage from "./ChatPage";
 
 const Sidebar = () => {
   const location = useLocation();
 
-  
   const urlParams = new URLSearchParams(location.search);
   const tab = urlParams.get("tab");
 
-  
   const renderComponent = () => {
     if (tab === "profile") {
       return <UserProfile />;
     }
     if (tab === "chat") {
-      return <Chatting />;
+      return <ChatPage />;
     }
-    
+
     return <PostsPage />;
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-auto">
-      <div className="hidden md:flex flex-col w-64 bg-neutral-800 text-white p-6">
+    <div className="flex flex-col md:flex-row h-screen overflow-auto ">
+      <div className="hidden md:flex flex-col w-64 bg-neutral-950 text-white p-6">
         <Link to="/home" className="mb-6 text-lg font-semibold">
           Logo
         </Link>
@@ -63,7 +61,10 @@ const Sidebar = () => {
         </nav>
       </div>
 
-      <Container className="flex-1 pt-10  scroll-smooth  overflow-y-auto " maxW={"900px"}>
+      <Container
+        className="flex-1 pt-10 pb-20 main-content bg-neutral-950 w-full "
+        maxW="full"
+      >
         {renderComponent()}
       </Container>
 

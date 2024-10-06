@@ -1,16 +1,28 @@
 import React from "react";
-import { Button, useToast } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import { toggleFollow } from "../Utils/Reducers/UserReducer"; 
+import { toast } from "react-toastify";
+import { followUser, unfollowUser } from "../Utils/Reducers/UserReducer";
 
-const FollowButton = ({ userId, isFollowing }) => {
-  const toast = useToast();
+const FollowButton = ({ userId, username }) => {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentuser);
+  const following = currentUser?.userDetails?.following || [];
 
-  const handleFollowToggle = async () => {
+  // Check if the current user is following the user to be followed
+  const isFollowing = following.some(
+    (followingUser) => followingUser.id === userId
+  );
+
+  const handleFollow = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+
+    if (!token) {
+      console.error("Token is missing. Please log in.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `http://localhost:5000/api/users/follow-user/${userId}`,
@@ -22,20 +34,20 @@ const FollowButton = ({ userId, isFollowing }) => {
         }
       );
 
-
-      dispatch(toggleFollow({ userId, isFollowing }));
-
-      toast({
-        title: response.data.message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      if (response.status === 200) {
+        if (isFollowing) {
+          // If currently following, dispatch unfollow action
+          dispatch(unfollowUser({ id: userId })); // Pass only the ID
+        } else {
+          // If not following, dispatch follow action
+          dispatch(followUser({ id: userId, username })); // Include username for storage
+        }
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error following/unfollowing user:", error);
       toast({
-        title: "Failed to follow/unfollow.",
-        description: error.response?.data?.message || "Please try again later.",
+        title: "Error!",
+        description: error.response?.data?.error || "Please try again later.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -45,10 +57,9 @@ const FollowButton = ({ userId, isFollowing }) => {
 
   return (
     <Button
-      ml="auto"
-      colorScheme={isFollowing ? "red" : "blue"}
+      onClick={handleFollow}
+      colorScheme={isFollowing ? "red" : "teal"}
       size="sm"
-      onClick={handleFollowToggle}
     >
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>

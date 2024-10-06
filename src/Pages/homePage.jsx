@@ -3,7 +3,7 @@ import Sidebar from "../Components/Sidebar";
 
 const HomePage = () => {
   return (
-    <div>
+    <div >
       <Sidebar />
     </div>
   );

@@ -1,97 +1,89 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const CreatePost = ({ postedBy, onClose }) => {
-  const [text, setText] = useState(""); 
-  const [img, setImg] = useState(null); 
-  const [error, setError] = useState(null); 
+const CreatePost = ({ postedBy, profilePic, onClose }) => {
+  const [text, setText] = useState("");
+  const [img, setImg] = useState(null);
+  const [error, setError] = useState(null);
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; 
+    const file = e.target.files[0];
     if (file) {
-      setImg(file); 
+      setImg(file);
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    
     const data = {
       postedBy,
-      text, 
+      profilePic,
+      text,
     };
 
     try {
-      
       if (img) {
-        
         const formData = new FormData();
-        formData.append("file", img); 
-        formData.append("upload_preset", "my_preset"); 
+        formData.append("file", img);
+        formData.append("upload_preset", "my_preset");
 
         // Upload the image to Cloudinary
         const uploadResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/dx8hzftyz/image/upload", 
+          "https://api.cloudinary.com/v1_1/dx8hzftyz/image/upload",
           formData
         );
 
-        // Get the image URL from the upload response
-        const imgUrl = uploadResponse.data.secure_url; 
+        const imgUrl = uploadResponse.data.secure_url;
 
-        // Add the image URL to the data object
-        data.img = imgUrl; 
+        data.img = imgUrl;
       }
 
-      
       const response = await axios.post(
         "http://localhost:5000/api/post/create",
         data,
         {
           headers: {
-            "Content-Type": "application/json", 
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-
-      // Handle successful response
-      console.log("Post created successfully:", response.data);
-      onClose(); 
+      window.location.reload();
+     toast.success("Success posting content");
+      onClose();
     } catch (err) {
-      // Handle errors
       if (err.response) {
-        setError(err.response.data.error); 
+        setError(err.response.data.error);
       } else {
-        setError("An error occurred. Please try again."); 
+        setError("An error occurred. Please try again.");
       }
       console.error("Error creating post:", err.message);
     }
   };
 
   return (
-    <div>
-      <h2 className="text-lg font-bold">Create Post</h2>
-      {error && <p className="text-red-500">{error}</p>} 
-      <form onSubmit={handleSubmit} className="mt-4">
+    <div className="w-full">
+      <h2 className="text-2xl mt-2 text-center pb-3 uppercase font-bold">
+        Create Post
+      </h2>
+      {error && <p className="text-red-500">{error}</p>}
+      <form onSubmit={handleSubmit} className="mt-6">
         <div>
           <textarea
             value={text}
-            onChange={(e) => setText(e.target.value)} 
+            onChange={(e) => setText(e.target.value)}
             placeholder="What's on your mind?"
-            className="border border-gray-300 rounded w-full p-2"
-            maxLength={500} 
+            className="border border-gray-300 rounded w-full p-6 text-lg"
+            maxLength={500}
           />
         </div>
-        <div className="mt-2">
-          <input
-            type="file"
-            accept="image/*" 
-            onChange={handleImageChange}
-          />
+        <div className="mt-2 text-lg">
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
         <button
           type="submit"
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded" 
+          className="mt-7 bg-teal-500 text-white px-4 py-2 rounded hover:bg-green-500"
         >
           Create Post
         </button>

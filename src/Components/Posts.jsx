@@ -26,13 +26,13 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 import axios from "axios";
-import FollowButton from './FollowButton';
-import { toggleFollow } from "../Utils/Reducers/UserReducer";
+import FollowButton from "./FollowButton";
 
 const Posts = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentuser);
   const currentUserId = currentUser.userDetails._id;
+  // const following = currentUser.userDetails.following;
 
   const { posts, loading, error } = useSelector((state) => state.posts);
 
@@ -46,6 +46,8 @@ const Posts = () => {
       dispatch(fetchPostsStart());
       try {
         const response = await axios.get("http://localhost:5000/api/post/");
+       // console.log(response);
+
         dispatch(fetchPostsSuccess(response.data));
       } catch (err) {
         dispatch(
@@ -142,7 +144,7 @@ const Posts = () => {
 
       dispatch(addReplySuccess({ postId, reply: newReply }));
       setCommentText("");
-      closeCommentModal(); 
+      closeCommentModal();
       // Success toast
       toast({
         title: "Comment added successfully.",
@@ -191,20 +193,17 @@ const Posts = () => {
             shadow="md"
             mb={4}
           >
-            <Flex alignItems="center" mb={2}>
+            <Flex alignItems="center" mb={2} className="flex justify-between pb-3">
               <Avatar
                 name={post.postedBy.username}
                 src={post.postedBy.profilePic}
               />
-              <Text ml={3} fontWeight="bold">
+              <Text ml={3} fontWeight="bold" className="text-lg">
                 {post.postedBy.username}
               </Text>
               <FollowButton
                 userId={post.postedBy._id}
-                isFollowing={post.postedBy.isFollowing}
-                onFollowToggle={(userId, isFollowing) => {
-                  dispatch(toggleFollow({ userId, isFollowing }));
-                }}
+                username={post.postedBy.username}
               />
             </Flex>
             {post.img && (
@@ -304,7 +303,10 @@ const Posts = () => {
               </Flex>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" onClick={() => addComment(selectedPost._id)}>
+              <Button
+                colorScheme="blue"
+                onClick={() => addComment(selectedPost._id)}
+              >
                 Add Comment
               </Button>
             </ModalFooter>
